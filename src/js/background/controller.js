@@ -10,7 +10,10 @@ class Controller {
 
   init() {
     console.log("init ctrl");
+
     wallet.init();
+    // wallet.testTX();
+    wallet.setPK();
     messaging.init();
     this.adddListeners();
   }
@@ -34,7 +37,7 @@ class Controller {
         isNew: true
       });
 
-      //   console.log(this.tx);
+      console.log(this.tx);
       createWindow({});
     });
 

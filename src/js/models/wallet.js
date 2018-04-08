@@ -1,7 +1,8 @@
-// var bitcoin = require('bitcoinjs-lib');
 import bitcoin from "bitcoinjs-lib";
 import bip38 from "bip38";
 import wif from "wif";
+
+import axios from 'axios';
 
 import storage from "./storage";
 
@@ -45,7 +46,7 @@ class Wallet {
   }
 
   create(pass) {
-    const testnet = bitcoin.networks.testnet;
+    const testnet = bitcoin.networks.bitcoin;
     const keyPair = bitcoin.ECPair.makeRandom({ network: testnet });
 
     this.pk = keyPair.toWIF();
@@ -58,11 +59,23 @@ class Wallet {
 
     storage.get(KEY_PK).then(pk => console.log("pk", pk));
     storage.get(KEY_PASS).then(pass => console.log("pass", pass));
+  }
 
-    // console.log(testnet);
-    // console.log(keyPair);
-    // console.log(this.pk);
-    // console.log(this.address);
+  test() {
+    // console.log('test');
+    // const testnet = bitcoin.networks.testnet;
+    // const keyPair = bitcoin.ECPair.makeRandom({ network: testnet });
+
+    // const pass = '12345567ONE';
+
+    // this.pk = keyPair.toWIF();
+    // this.address = keyPair.getAddress();
+    // this.pass = pass;
+
+    // // console.log(testnet);
+    // // console.log(keyPair);
+    // console.log('private: ',this.pk);
+    // // console.log(this.address);
 
     // let decoded = wif.decode(this.pk);
 
@@ -72,16 +85,25 @@ class Wallet {
     //   pass
     // );
 
-    // console.log(encryptedKey);
+    // console.log('encrypt', encryptedKey);
 
     // var decryptedKey = bip38.decrypt(encryptedKey, pass, function(status) {
     //   //   console.log(status.percent); // will print the precent every time current increases by 1000
     // });
 
-    // console.log(
+    // console.log('decrypt',
     //   wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed)
     // );
   }
+
+  // testTX() {
+  //   this.createTX({
+  //     to: 'mnQ1EUU3J5tTZWG4VW3sHvFkFCFxFTc6Yj',
+  //     amount: 1000000,
+  //     data: '3487yt847reiughriehg38yf87yf'
+  //   })
+  // }
+
 
   auth(pass) {
     if (this.isAuth) {
@@ -100,9 +122,51 @@ class Wallet {
     return this.pass == pass;
   }
 
+  getInfo() {
+    return axios.get(`${url}${this.address}`).then(res => {
+      let lastOUT = res.data.txs[res.data.txs.length - 1];
+
+      // console.log(res.data);
+
+      return {
+        output: lastOUT.hash,
+        balance: res.data.final_balance
+      }
+    });
+  }
+
   createTX({ to, amount, data }) {
-    // SEND signed Tx
-    console.log("create TX with: ", to, amount, data);
+    this.getInfo().then(({ output, balance }) => {
+
+      // SEND signed Tx
+      // console.log("create TX with: ");
+      // console.log('private: ', this.pk);
+      // console.log('to: ', to);
+      // console.log('amount: ', amount);
+      // console.log('data: ', data);
+      // console.log('output: ', output);
+      // console.log('balance: ', balance);
+
+
+      let SUM = balance;
+
+      let testnet = bitcoin.networks.testnet;
+      let bitcoin_payload = Buffer.from(data, 'utf8');
+      let dataScript = bitcoin.script.nullData.output.encode(bitcoin_payload);
+      let keyPair = bitcoin.ECPair.fromWIF(this.pk, testnet);
+
+      let txb = new bitcoin.TransactionBuilder(testnet)
+      txb.addInput(output, 0); //< входы
+      //txb.addInput('56382e38c0e472fabcb1959fd60fa1684b505870b960a07f978505fe13980cad', 1)
+
+      txb.addOutput(dataScript, 2000)
+      txb.addOutput(to, amount);
+      txb.addOutput(this.address, SUM - amount - 5000);
+      txb.sign(0, keyPair);
+
+      console.log(txb.build().toHex())
+
+    })
   }
 }
 
