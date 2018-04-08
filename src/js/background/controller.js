@@ -1,0 +1,89 @@
+import createWindow from "../libs/txWindow";
+import wallet from "../models/wallet";
+import storage from "../models/storage";
+import messaging from "./message";
+
+class Controller {
+  constructor() {
+    this.tx = [];
+  }
+
+  init() {
+    console.log("init ctrl");
+    wallet.init();
+    messaging.init();
+    this.adddListeners();
+  }
+
+  adddListeners() {
+    // Show window with TX
+    messaging.on("tx_send", data => {
+      this.tx.push({
+        ...data,
+        id: this.tx.length
+      });
+
+      console.log(this.tx);
+      createWindow({});
+    });
+
+    // Show window with TX
+    messaging.on("tx_create", data => {
+      this.tx.push({
+        id: this.tx.length,
+        isNew: true
+      });
+
+      //   console.log(this.tx);
+      createWindow({});
+    });
+
+    // Render TX in popup
+    messaging.on("payment_init", data => {
+      messaging.send({
+        type: "payment_tx",
+        payload: this.tx[this.tx.length - 1]
+      });
+    });
+
+    // Render TX in popup
+    messaging.on("payment_submit", payload => {
+      const { id } = payload;
+      this.tx[id] = {
+        ...this.tx[id],
+        ...payload
+      };
+      wallet.createTX(this.tx[id]);
+    });
+
+    // Is has wallet
+    messaging.on("has_wallet", () => {
+      wallet.isHasWallet().then(res => {
+        messaging.send({
+          type: "has_wallet_result",
+          payload: res
+        });
+      });
+    });
+
+    // Create wallet
+    messaging.on("wallet_create", payload => {
+      wallet.create(payload.pass);
+
+      messaging.send({
+        type: "wallet_create_success"
+      });
+    });
+
+    // Create wallet
+    messaging.on("wallet_auth", payload => {
+      messaging.send({
+        type: "wallet_auth_result",
+        payload: wallet.auth(payload.pass)
+      });
+    });
+  }
+}
+
+const controller = new Controller();
+export default controller;
