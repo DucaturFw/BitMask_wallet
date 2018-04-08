@@ -5,7 +5,11 @@ import axios from "axios";
 import wallet from "./../models/wallet";
 
 export default class Balance extends React.Component {
-  componentDidMount() {}
+  componentDidMount() {
+    wallet.getInfo().then(res => {
+      console.log(res.data);
+    })
+  }
 
   onSendClick = () => {
     if (this.props.onSend) {

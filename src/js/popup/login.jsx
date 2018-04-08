@@ -55,7 +55,7 @@ export default class Auth extends React.Component {
     return (
       <div className="login__wrapper">
         <header className="login__wrapper-header">
-          <h1>BitMask</h1>
+          <img src="bitmask.png" />
         </header>
         <div className="login__content">
           {this.showCreate() && (
@@ -67,6 +67,8 @@ export default class Auth extends React.Component {
             <div>
               <div className="login__create">
                 <input
+                  placeholder="enter password"
+                  className="login__input"
                   type="password"
                   onChange={this.handlePass}
                   value={this.state.pass}
@@ -81,6 +83,8 @@ export default class Auth extends React.Component {
             <div>
               <div className="login__create">
                 <input
+                  placeholder="enter password"
+                  className="login__input"
                   type="password"
                   onChange={this.handlePass}
                   value={this.state.pass}

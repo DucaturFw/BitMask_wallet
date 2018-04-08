@@ -4,6 +4,7 @@ class Storage {
   get(key) {
     return new Promise(resolve => {
       chrome.storage.local.get(key, function (result) {
+        console.log(key, result[key])
         resolve(result[key]);
       });
     });
@@ -12,6 +13,7 @@ class Storage {
   set(key, value) {
     return new Promise(resolve => {
       chrome.storage.local.set({ [key]: value }, function () {
+        console.log({ [key]: value })
         resolve();
       });
     });

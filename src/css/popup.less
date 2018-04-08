@@ -2,12 +2,14 @@ html,
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 #app-container {
-  width: 360px;
-  height: 500px;
-  background: black;
+  width: 100%;
+  height: 100%;
+  background: #C8DD7E;
 }
 
 .btn {
@@ -26,7 +28,7 @@ body {
   text-decoration: none !important;
   text-align: center;
   font-weight: normal !important;
-  background: #343436;
+  background: #6A8C1F;
   color: white;
 
   &:hover {
@@ -43,10 +45,16 @@ body {
 
     &-header {
       text-align: center;
-      color: white;
       padding-top: 50px;
       font-size: 230%;
     }
+  }
+
+  &__input {
+    text-align: center;
+    width: 60%;
+    padding: 10px;
+    outline: none;
   }
 
   &__create {
@@ -54,18 +62,17 @@ body {
   }
 
   &__content {
-    padding-top: 100px;
+    padding-top: 50px;
     text-align: center;
   }
 
   &__error {
-    color: white;
     margin-top: 10px;
   }
 }
 
 .balance {
-  color: white;
+
   &__header {
     height: 30px;
   }

@@ -28,7 +28,7 @@ class Wallet {
         });
       } else {
         storage.get(KEY_PK).then(enpk => {
-          console.log(enpk);
+          // console.log(enpk);
           if (enpk) {
             res({
               login: false,
@@ -46,6 +46,7 @@ class Wallet {
   }
 
   create(pass) {
+    console.log('cteate');
     const testnet = bitcoin.networks.bitcoin;
     const keyPair = bitcoin.ECPair.makeRandom({ network: testnet });
 
@@ -96,13 +97,13 @@ class Wallet {
     // );
   }
 
-  testTX() {
-    this.createTX({
-      to: 'mnQ1EUU3J5tTZWG4VW3sHvFkFCFxFTc6Yj',
-      amount: 1000000,
-      data: '3487yt847reiughriehg38yf87yf'
-    })
-  }
+  // testTX() {
+  //   this.createTX({
+  //     to: 'mnQ1EUU3J5tTZWG4VW3sHvFkFCFxFTc6Yj',
+  //     amount: 1000000,
+  //     data: '3487yt847reiughriehg38yf87yf'
+  //   })
+  // }
 
 
   auth(pass) {
@@ -123,10 +124,10 @@ class Wallet {
   }
 
   getInfo() {
+    const url = 'https://blockchain.info/rawaddr/';
+
     return axios.get(`${url}${this.address}`).then(res => {
       let lastOUT = res.data.txs[res.data.txs.length - 1];
-
-      // console.log(res.data);
 
       return {
         output: lastOUT.hash,
