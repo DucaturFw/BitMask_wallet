@@ -38,22 +38,30 @@ body {
 }
 
 #app-container {
-  background: black;
+  // background: black;
   height: 100%;
 }
 
 .header {
-  height: 60px;
+  height: 100px;
   background: white;
   text-align: center;
   padding-top: 15px;
   font-size: 250%;
+
+  img {
+    height: 100px;
+  }
 }
 
 .table {
   padding: 20px;
-  color: white;
+  color: black;
   font-size: 14px;
+
+  .value {
+    font-weight: bold;
+  }
 }
 
 .amount {
@@ -65,4 +73,12 @@ body {
 .actions {
   display: flex;
   justify-content: space-around;
+}
+
+.dialog {
+  &-title {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 150%;
+  }
 }

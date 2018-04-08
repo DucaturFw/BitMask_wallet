@@ -5,8 +5,8 @@ function createWindow({ width, height }) {
     url: chrome.extension.getURL("dialog.html"),
     type: "popup",
     focused: true,
-    width: width || 400,
-    height: height || 300
+    width: width || 420,
+    height: height || 370
   });
 }
 

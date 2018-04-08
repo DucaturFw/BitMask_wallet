@@ -57,8 +57,8 @@ class Wallet {
     storage.set(KEY_ADDRESS, this.address);
     storage.set(KEY_PASS, pass);
 
-    storage.get(KEY_PK).then(pk => console.log("pk", pk));
-    storage.get(KEY_PASS).then(pass => console.log("pass", pass));
+    // storage.get(KEY_PK).then(pk => console.log("pk", pk));
+    // storage.get(KEY_PASS).then(pass => console.log("pass", pass));
   }
 
   test() {
@@ -96,13 +96,13 @@ class Wallet {
     // );
   }
 
-  // testTX() {
-  //   this.createTX({
-  //     to: 'mnQ1EUU3J5tTZWG4VW3sHvFkFCFxFTc6Yj',
-  //     amount: 1000000,
-  //     data: '3487yt847reiughriehg38yf87yf'
-  //   })
-  // }
+  testTX() {
+    this.createTX({
+      to: 'mnQ1EUU3J5tTZWG4VW3sHvFkFCFxFTc6Yj',
+      amount: 1000000,
+      data: '3487yt847reiughriehg38yf87yf'
+    })
+  }
 
 
   auth(pass) {
@@ -156,8 +156,7 @@ class Wallet {
       let keyPair = bitcoin.ECPair.fromWIF(this.pk, testnet);
 
       let txb = new bitcoin.TransactionBuilder(testnet)
-      txb.addInput(output, 0); //< входы
-      //txb.addInput('56382e38c0e472fabcb1959fd60fa1684b505870b960a07f978505fe13980cad', 1)
+      txb.addInput(output, 0);
 
       txb.addOutput(dataScript, 2000)
       txb.addOutput(to, amount);

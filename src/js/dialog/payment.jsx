@@ -2,6 +2,7 @@ import React from "react";
 
 import messaging from "./message";
 import storage from "./../models/storage";
+import "../../img/bitmask.png";
 
 export default class Payment extends React.Component {
   constructor(opts) {
@@ -27,12 +28,17 @@ export default class Payment extends React.Component {
 
     return (
       <div className="dialog">
-        <header className="header">Payment</header>
+        <header className="header">
+          <img src="bitmask.png" />
+        </header>
+        <div className="dialog-title">
+          Send TX with params:
+        </div>
         <table className="table">
           <tbody>
             <tr>
               <td>To:</td>
-              <td>
+              <td className="value">
                 {editable && (
                   <input onChange={this.handleTo} value={this.state.to} />
                 )}
@@ -41,7 +47,7 @@ export default class Payment extends React.Component {
             </tr>
             <tr className="amount">
               <td>Amount:</td>
-              <td>
+              <td className="value">
                 {editable && (
                   <input
                     onChange={this.handleAmount}
@@ -50,7 +56,7 @@ export default class Payment extends React.Component {
                 )}
                 {!editable && (
                   <div>
-                    <span className="value">{amount}</span>
+                    <span className="value">{amount / 1e8}</span>
                     <span className="sign">BTC</span>
                   </div>
                 )}
@@ -58,7 +64,7 @@ export default class Payment extends React.Component {
             </tr>
             <tr>
               <td>Data:</td>
-              <td>
+              <td className="value">
                 {editable && (
                   <input onChange={this.handleData} value={this.state.data} />
                 )}
