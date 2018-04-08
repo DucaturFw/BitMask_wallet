@@ -2,13 +2,27 @@ import React from "react";
 import moment from "moment";
 import axios from "axios";
 
-import wallet from "./../models/wallet";
+import messaging from "./message";
 
 export default class Balance extends React.Component {
+
+  constructor(opts) {
+    super(opts);
+
+    this.state = {}
+  }
+
   componentDidMount() {
-    wallet.getInfo().then(res => {
-      console.log(res.data);
+    messaging.send({
+      type: 'wallet_info'
     })
+
+    messaging.on('wallet_info_result', (data) => {
+      this.setState(state => ({
+        ...state,
+        ...data
+      }))
+    });
   }
 
   onSendClick = () => {
@@ -47,10 +61,10 @@ export default class Balance extends React.Component {
           </div>
           <div className="balance__data">
             <div className="balance__address">
-              1DMCGx8KScwVeeDbLiAR8WdJfA6gChKkY7
+              {this.state.address}
             </div>
             <div className="balance__value">
-              <span className="value">0.0333303032</span>
+              <span className="value">{this.state.balance / 1e8}</span>
               <span className="sign">BTC</span>
             </div>
           </div>

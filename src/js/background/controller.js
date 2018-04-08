@@ -78,12 +78,22 @@ class Controller {
       });
     });
 
-    // Create wallet
+    // Auth wallet
     messaging.on("wallet_auth", payload => {
       messaging.send({
         type: "wallet_auth_result",
         payload: wallet.auth(payload.pass)
       });
+    });
+
+    // GetWallet info
+    messaging.on("wallet_info", () => {
+      wallet.getInfo().then(data => {
+        messaging.send({
+          type: "wallet_info_result",
+          payload: data
+        });
+      })
     });
   }
 }

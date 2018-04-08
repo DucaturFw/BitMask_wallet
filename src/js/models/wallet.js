@@ -124,30 +124,36 @@ class Wallet {
   }
 
   getInfo() {
-    const url = 'https://blockchain.info/rawaddr/';
+    const url = 'https://testnet.blockchain.info/rawaddr/';
 
     return axios.get(`${url}${this.address}`).then(res => {
-      let lastOUT = res.data.txs[res.data.txs.length - 1];
+      const lastOUT = res.data.txs[0];
+      const outputIndex = lastOUT.out.findIndex(item => item.addr === this.address);
+
+      console.log(outputIndex);
+      console.log(res.data);
 
       return {
+        index: outputIndex,
+        address: res.data.address,
         output: lastOUT.hash,
-        balance: res.data.final_balance
+        balance: res.data.final_balance,
+        txs: res.data.txs
       }
     });
   }
 
   createTX({ to, amount, data }) {
-    this.getInfo().then(({ output, balance }) => {
+    this.getInfo().then(({ output, balance, index }) => {
 
       // SEND signed Tx
-      // console.log("create TX with: ");
+      console.log("create TX with: ");
       // console.log('private: ', this.pk);
       // console.log('to: ', to);
       // console.log('amount: ', amount);
       // console.log('data: ', data);
       // console.log('output: ', output);
       // console.log('balance: ', balance);
-
 
       let SUM = balance;
 
@@ -157,15 +163,16 @@ class Wallet {
       let keyPair = bitcoin.ECPair.fromWIF(this.pk, testnet);
 
       let txb = new bitcoin.TransactionBuilder(testnet)
-      txb.addInput(output, 0);
+      txb.addInput(output, index);
 
       txb.addOutput(dataScript, 2000)
       txb.addOutput(to, amount);
       txb.addOutput(this.address, SUM - amount - 5000);
       txb.sign(0, keyPair);
 
-      console.log(txb.build().toHex())
-
+      // axios.post('https://testnet.blockchain.info/pushtx', 'tx=' + txb.build().toHex()).then((data) => {
+      //   console.log(data);
+      // })
     })
   }
 }
