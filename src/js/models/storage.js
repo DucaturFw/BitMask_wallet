@@ -1,10 +1,9 @@
 class Storage {
-  constructor() {}
+  constructor() { }
 
   get(key) {
     return new Promise(resolve => {
-      chrome.storage.local.get(key, function(result) {
-        console.log(result);
+      chrome.storage.local.get(key, function (result) {
         resolve(result[key]);
       });
     });
@@ -12,7 +11,7 @@ class Storage {
 
   set(key, value) {
     return new Promise(resolve => {
-      chrome.storage.local.set({ [key]: value }, function() {
+      chrome.storage.local.set({ [key]: value }, function () {
         resolve();
       });
     });

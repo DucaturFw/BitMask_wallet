@@ -13,7 +13,7 @@ class Controller {
 
     wallet.init();
     // wallet.testTX();
-    wallet.setPK();
+    // wallet.setPK();
     messaging.init();
     this.adddListeners();
   }
